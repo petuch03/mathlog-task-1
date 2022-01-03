@@ -6,17 +6,48 @@ public class main {
     static List<String> result;
     static List<String> data;
     public static void main(String[] args) {
-        String test_1 = "((!A&!B)->!(A|B))";
-        //data = parser(test_1);
-        data = Arrays.asList("(", "(", "(!A)", "&", "(!B)", ")", "->", "(", "!(", "A", "|", "B", ")", ")", ")");
-        parseNot();
-        System.out.println(data);
-        System.out.println("------UTILITY SOUT ABOVE------");
-        Expression expression = new Expression(data);
-        expression.read();
-        System.out.println(test_1);
-        System.out.println("------PREORDER------");
-        expression.preorderPrint();
+//        String test_1 = "!A&!B->!(A|B)";
+//        String test_2 = "P1’->!QQ->!R10&S|!T&U&V";
+//        data = parser(test_1);
+//        Parser parser = new Parser();
+//
+//        System.out.println("------TEST_1------");
+//        System.out.println(test_1);
+//        System.out.println(parser.parse(test_1).toString());
+//        System.out.println("(->,(&,(!A),(!B)),(!(|,A,B)))");
+//
+//        System.out.println("------TEST_2------");
+//        System.out.println(test_2);
+//        System.out.println(parser.parse(test_2).toString());
+//        System.out.println("(->,P1’,(->,(!QQ),(|,(&,(!R10),S),(&,(&,(!T),U),V))))");
+//
+//        System.out.println("------TEST_3------");
+//        Scanner scanner = new Scanner(System.in);
+//        String string = scanner.next();
+//        System.out.println(test_2);
+//        System.out.println(parser.parse(string).toString());
+//        System.out.println("(->,P1’,(->,(!QQ),(|,(&,(!R10),S),(&,(&,(!T),U),V))))");
+
+//(&,(&,A,B),C))
+
+
+
+//        String test_1 = "((!A&!B)->!(A|B))";
+//        //data = parser(test_1);
+//        //data = Arrays.asList("(", "(", "(!A)", "&", "(!B)", ")", "->", "(", "!(", "A", "|", "B", ")", ")", ")");
+//        //data = Arrays.asList("(", "!", "(", "!", "A", ")", ")", "&", "(", "!", "(", "B", "|", "C", ")", ")", "|", "(", "!", "(", "!", "(", "F", "&", "D", ")", ")", ")");
+//        data = Arrays.asList("(", "A", "&", "(", "B", "|", "C", ")", ")");
+//        //parseNot();
+////        System.out.println(data);
+////        System.out.println("------UTILITY SOUT ABOVE------");
+//        Expression expression = new Expression(data);
+//        expression.read();
+////        System.out.println(data);
+//        System.out.println("------ANSWER------");
+//        expression.preorderPrint();
+
+        ParsingSystem.test1();
+        System.out.println(FullExpression.toStringAllTree());
     }
 
     public static List<String> parser(String input) {
