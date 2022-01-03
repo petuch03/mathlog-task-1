@@ -28,7 +28,7 @@ public class main {
         List<String> data = Arrays.asList(inp);
 
         return data.stream()
-                .filter(i -> !Objects.equals(i, " ") && !Objects.equals(i, ">") && !Objects.equals(i, "\n"))
+                .filter(i -> !Objects.equals(i, " ") && !Objects.equals(i, ">") && !Objects.equals(i, "\r"))
                 .collect(Collectors.toList());
     }
 
