@@ -2,11 +2,11 @@ public class Expression {
     private Expression leftBranch;
     private Expression rightBranch;
     private Expression parent;
-    private String variable;
+    private final String variable;
     private Operation operation;
     private String negros;
 
-    public Expression(Expression leftBranch, Expression rightBranch, Expression parent, String variable, Operation operation, String negros){
+    public Expression(Expression leftBranch, Expression rightBranch, Expression parent, String variable, Operation operation, String negros) {
         this.leftBranch = leftBranch;
         this.rightBranch = rightBranch;
         this.parent = parent;
@@ -29,26 +29,49 @@ public class Expression {
     }
 
     public enum Operation {
-        AND, OR, IMPL, VAR
+        AND, OR, IMPL, VAR, SKOBKA, ROOT
     }
 
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        while(negros.length() > 0) {
-            switch (operation){
-                case OR -> result.append("(!" + "(|,").append(leftBranch.toString()).append(",").append(rightBranch.toString()).append("))");
-                case AND -> result.append("(!" + "(&,").append(leftBranch.toString()).append(",").append(rightBranch.toString()).append("))");
-                case IMPL -> result.append("(!" + "(->,").append(leftBranch.toString()).append(",").append(rightBranch.toString()).append("))");
-                case VAR -> result.append("(!").append(variable).append(")");
+        StringBuilder result = new StringBuilder("");
+        int negroslength = negros.length();
+        if (negroslength == 0) {
+            switch (operation) {
+                case OR:
+                    result.append("(|,").append(leftBranch != null ? leftBranch.toString() : "").append(",").append(rightBranch != null ? rightBranch.toString() : "").append(")");
+                    break;
+                case AND:
+                    result.append("(&,").append(leftBranch != null ? leftBranch.toString() : "").append(",").append(rightBranch != null ? rightBranch.toString() : "").append(")");
+                    break;
+                case IMPL:
+                    result.append("(->,").append(leftBranch != null ? leftBranch.toString() : "").append(",").append(rightBranch != null ? rightBranch.toString() : "").append(")");
+                    break;
+                case SKOBKA:
+                    result.append(leftBranch != null ? leftBranch.toString() : "");
+                    break;
+                case VAR:
+                    result.append(variable);
+                    break;
             }
-            negros = negros.substring(negros.length() - 1);
+        } else {
+            for (int i = 0; i < negroslength; i++) {
+                result.append("(!");
+            }
+
+            switch (operation) {
+                case SKOBKA:
+                    result.append(leftBranch != null ? leftBranch.toString() : "");
+                    break;
+                case VAR:
+                    result.append(variable);
+                    break;
+            }
+
+            for (int i = 0; i < negroslength; i++) {
+                result.append(")");
+            }
         }
-        switch (operation){
-            case OR -> result.append("(|,").append(leftBranch.toString()).append(",").append(rightBranch.toString()).append(")");
-            case AND -> result.append("(&,").append(leftBranch.toString()).append(",").append(rightBranch.toString()).append(")");
-            case IMPL -> result.append("(->,").append(leftBranch.toString()).append(",").append(rightBranch.toString()).append(")");
-            case VAR -> result.append(variable);
-        }
+
         return result.toString();
     }
 
