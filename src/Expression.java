@@ -1,121 +1,117 @@
-import java.util.List;
-import java.util.Objects;
-
 public class Expression {
-    private class Node {
-        private String value;
-        private Node left;
-        private Node right;
+    private Expression leftBranch;
+    private Expression rightBranch;
+    private Expression parent;
+    private final String variable;
+    private Operation operation;
+    private String negros;
 
-        public Node() {
-
-        }
-
-        public Node(String value) {
-            this.value = value;
-        }
-
-        public Node(String value, Node left, Node right) {
-            this.value = value;
-            this.left = left;
-            this.right = right;
-        }
-
-        private boolean isLeaf() {
-            return (left == null && right == null);
-        }
+    public Expression(Expression leftBranch, Expression rightBranch, Expression parent, String variable, Operation operation, String negros) {
+        this.leftBranch = leftBranch;
+        this.rightBranch = rightBranch;
+        this.parent = parent;
+        this.variable = variable;
+        this.operation = operation;
+        this.negros = negros;
     }
 
-    private Node root;
-    private final List<String> data;
-    int position;
-
-    public Expression(List<String> data) {
-        this.root = null;
-        this.position = 0;
-        this.data = data;
+    public Expression() {
+        this.leftBranch = null;
+        this.rightBranch = null;
+        this.parent = null;
+        this.variable = null;
+        this.operation = null;
+        this.negros = null;
     }
 
-    private Node readTree() {
-        Node n = new Node();
+    public void setNegros(String negros) {
+        this.negros = negros;
+    }
 
-        String character = data.get(position++);
-        String tmp = new String(character);
-        if (main.isVariable(character) || (tmp.toCharArray().length > 1 && tmp.toCharArray()[1] == '!')) {
-            n.value = (character.equals("!") ? null : character);
-            n.left = null;
-            n.right = null;
-        } else if (character.equals("(") || character.equals("!(")) {
-            n.left = readTree();
-            n.value = data.get(position++);
-            n.right = readTree();
-            character = data.get(position++);
-            if (!Objects.equals(character, ")")) {
-                System.out.print("EXPECTED ) at " + position + " \"" + data.get(position - 1) + "\"");
-                System.exit(1);
+    public enum Operation {
+        AND, OR, IMPL, VAR, SKOBKA, ROOT
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder("");
+        int negroslength = negros.length();
+        if (negroslength == 0) {
+            switch (operation) {
+                case OR:
+                    result.append("(|,").append(leftBranch != null ? leftBranch.toString() : "").append(",").append(rightBranch != null ? rightBranch.toString() : "").append(")");
+                    break;
+                case AND:
+                    result.append("(&,").append(leftBranch != null ? leftBranch.toString() : "").append(",").append(rightBranch != null ? rightBranch.toString() : "").append(")");
+                    break;
+                case IMPL:
+                    result.append("(->,").append(leftBranch != null ? leftBranch.toString() : "").append(",").append(rightBranch != null ? rightBranch.toString() : "").append(")");
+                    break;
+                case SKOBKA:
+                    result.append(leftBranch != null ? leftBranch.toString() : "");
+                    break;
+                case VAR:
+                    result.append(variable);
+                    break;
             }
-//        } else if (character.equals("!(")){
-//            System.out.println("!");
         } else {
-            System.out.print("EXPECTED (((((((((((( at " + position + " \"" + data.get(position - 1) + "\"");
-            System.exit(1);
+            for (int i = 0; i < negroslength; i++) {
+                result.append("(!");
+            }
+
+            switch (operation) {
+                case SKOBKA:
+                    result.append(leftBranch != null ? leftBranch.toString() : "");
+                    break;
+                case VAR:
+                    result.append(variable);
+                    break;
+            }
+
+            for (int i = 0; i < negroslength; i++) {
+                result.append(")");
+            }
         }
 
-        return n;
+        return result.toString();
     }
 
-    public void read() {
-        root = readTree();
+    public Operation getOperation() {
+        return operation;
     }
 
-    public void preorderPrintTree(Node root) {
-        if (root.isLeaf()) {
-            System.out.print(root.value);
-        } else {
-//            switch (root.value) {
-//                case "&" -> System.out.print("(" + root.value);
-//                case "->" -> System.out.print("(" + root.value);
-//                case "|" -> System.out.print("(" + root.value);
-//            }
-            System.out.print("(" + root.value);
-            System.out.print(",");
-            preorderPrintTree(root.left);
-            System.out.print(",");
-            preorderPrintTree(root.right);
-            System.out.print(")");
-        }
+    public Expression getLeftBranch() {
+        return leftBranch;
     }
 
-    public void preorderPrint() {
-        if (root != null) {
-            preorderPrintTree(root);
-        }
+    public Expression getParent() {
+        return parent;
     }
 
+    public Expression getRightBranch() {
+        return rightBranch;
+    }
 
-//    private static Expression parseExpression(List<String> data){
-//        Expression fullExpr = new Expression(null, null, false, "Z");
-//        Expression current = fullExpr;
-//
-//        for (int i = 0; i < data.size(); i++) {
-//            switch(data.get(i)){
-//                case "&":
-//                case "|":
-//                case "->":
-//                     break;
-//
-//                case "(":
-//                    break;
-//                case "!":
-//                default:
-//            }
-//        }
-//    }
-//
-//    private static Expression parseVarOrSkobka(){
-//        Expression result = new Expression(null, null, false, "Z");
-//
-//        return result;
-//    }
+    public String getNegros() {
+        return negros;
+    }
 
+    public String getVariable() {
+        return variable;
+    }
+
+    public void setParent(Expression parent) {
+        this.parent = parent;
+    }
+
+    public void setLeftBranch(Expression leftBranch) {
+        this.leftBranch = leftBranch;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public void setRightBranch(Expression rightBranch) {
+        this.rightBranch = rightBranch;
+    }
 }
